@@ -1,0 +1,35 @@
+---
+ - hosts: test
+   become: true
+
+   tasks:
+     - name: Create group superusers
+       group:
+         name: superusers
+         state: present
+
+     - name: create user user2
+       user:
+         name: user2
+         group: superusers
+         state: present
+
+     - name: create user user3
+       user:
+         name: user3
+         group: superusers
+         state: present
+
+     - name: create file in sudoers.d
+       file:
+         path: /etc/sudoers.d/superusers
+         state: touch
+         owner: root
+         group: root
+         mode: 0600
+
+     - name: Create line in /etc/sudoers.d/superusers
+       lineinfile:
+         path: /etc/sudoers.d/superusers
+         line: '%superusers ALL=(ALL) NOPASSWD: ALL'
+         create: yes
