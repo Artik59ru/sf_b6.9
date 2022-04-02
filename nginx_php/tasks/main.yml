@@ -35,7 +35,23 @@
     dest: /etc/nginx/sites-available/default
     regexp: 'index index.html index.htm index.nginx-debian.html;'
     insertafter: '^index index.html index.htm index.nginx-debian.html;'
-    line: index.php
+    line: 'index index.php'
+    state: present
+
+- name: Add .php to index
+  lineinfile:
+    dest: /etc/nginx/sites-available/default
+    regexp: 'server_name _;'
+    insertafter: 'server_name _;'
+    line: '
+    server_name _;
+    location ~ \.php$ {
+fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+fastcgi_index index.php;
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+include /etc/nginx/fastcgi_params;
+}
+    '
     state: present
 
 - name: Start service nginx
@@ -44,12 +60,12 @@
     state: restarted
     enabled: yes
 
-- name: create file in sudoers.d
+- name: create index.php
   file:
     path: /var/www/html/index.php
     state: touch
 
-- name: Create line in /etc/sudoers.d/superusers
+- name: Create index.php
   lineinfile:
     path: /var/www/html/index.php
     line: '<?php phpinfo();?>'
