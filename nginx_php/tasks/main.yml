@@ -1,0 +1,37 @@
+---
+# tasks file for nginx_php
+- name: Install NGINX
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Install php-fpm
+  apt:
+    state: present
+    pkg:
+    - php7.4 
+    - php7.4-cli
+    - php7.4-fpm
+    - php7.4-json
+    - php7.4-pdo
+    - php7.4-mysql
+    - php7.4-zip 
+    - php7.4-gd
+    - php7.4-mbstring
+    - php7.4-curl
+    - php7.4-xml
+    - php-pear 
+    - php7.4-bcmath
+
+- name: Start service php7.4-fpm
+  service:
+    name: php7.4-fpm
+    state: started
+    enabled: yes
+
+- name: Start service nginx
+  service:
+    name: nginx
+    state: reloaded
+    enabled: yes
