@@ -30,8 +30,27 @@
     state: started
     enabled: yes
 
+- name: Add .php to index
+  lineinfile:
+    dest: /etc/nginx/sites-available/default
+    regexp: 'index index.html index.htm index.nginx-debian.html;'
+    insertafter: '^index index.html index.htm index.nginx-debian.html;'
+    line: index.php
+    state: present
+
 - name: Start service nginx
   service:
     name: nginx
-    state: reloaded
+    state: restarted
     enabled: yes
+
+- name: create file in sudoers.d
+  file:
+    path: /var/www/html/index.php
+    state: touch
+
+- name: Create line in /etc/sudoers.d/superusers
+  lineinfile:
+    path: /var/www/html/index.php
+    line: '<?php phpinfo();?>'
+    create: yes
