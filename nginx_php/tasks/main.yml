@@ -30,35 +30,25 @@
     state: started
     enabled: yes
 
-- name: Add .php to index
-  lineinfile:
-    dest: /etc/nginx/sites-available/default
-    regexp: 'index index.html index.htm index.nginx-debian.html;'
-    insertafter: '^index index.html index.htm index.nginx-debian.html;'
-    line: 'index index.php'
-    state: present
+- name: Remove default site
+  file:
+    path: /etc/nginx/sites-available/default
+    state: absent
 
-- name: Add .php to index
-  lineinfile:
+- name: Add new default site
+  copy:
+    src: /etc/ansible/roles/nginx_phpfpm/files/localhost
     dest: /etc/nginx/sites-available/default
-    regexp: 'server_name _;'
-    insertafter: 'server_name _;'
-    line: '
-    server_name _;
-    location ~ \.php$ {
-      fastcgi_pass unix:/run/php/php7.4-fpm.sock;
-      fastcgi_index index.php;
-      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-      include /etc/nginx/fastcgi_params;
-    }
-    '
-    state: present
+    remote_src: yes
+    owner: www-data
+    group: www-data
 
-- name: Start service nginx
-  service:
-    name: nginx
-    state: restarted
-    enabled: yes
+- name: Create site directory
+  file: 
+    path:  /var/www/localhost/html
+    state: directory
+    owner: www-data
+    group: www-data
 
 - name: create index.php
   file:
@@ -70,3 +60,9 @@
     path: /var/www/html/index.php
     line: '<?php phpinfo();?>'
     create: yes
+    
+- name: Start service nginx
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
