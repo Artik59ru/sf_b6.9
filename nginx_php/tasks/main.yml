@@ -52,12 +52,12 @@
 
 - name: create index.php
   file:
-    path: /var/www/html/index.php
+    path: /var/www/localhost/html/index.php
     state: touch
 
 - name: Create index.php
   lineinfile:
-    path: /var/www/html/index.php
+    path: /var/www/localhost/html/index.php
     line: '<?php phpinfo();?>'
     create: yes
     
