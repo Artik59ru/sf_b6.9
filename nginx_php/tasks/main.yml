@@ -44,16 +44,16 @@
 
 - name: Create site directory
   file: 
-    path:  /var/www/localhost/html
+    path:  /opt/nginx/ansible
     state: directory
 
 - name: create index.php
   file:
-    path: /var/www/localhost/html/index.php
+    path: /opt/nginx/ansible/index.php
     state: touch
 
 - name: Create index.php
   lineinfile:
-    path: /var/www/localhost/html/index.php
+    path: /opt/nginx/ansible/index.php
     line: '<?php phpinfo();?>'
     create: yes
