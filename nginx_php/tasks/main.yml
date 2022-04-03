@@ -30,18 +30,6 @@
     state: started
     enabled: yes
 
-- name: Remove default site
-  file:
-    path: /etc/nginx/sites-available/default
-    state: absent
-
-- name: Add new default site
-  copy:
-    src: /etc/ansible/roles/nginx_phpfpm/files/localhost
-    dest: /etc/nginx/sites-available/default
-    remote_src: yes
-  notify: reload_nginx
-
 - name: Create site directory
   file: 
     path:  /opt/nginx/ansible
@@ -57,3 +45,15 @@
     path: /opt/nginx/ansible/index.php
     line: '<?php phpinfo();?>'
     create: yes
+
+- name: Remove default site
+  file:
+    path: /etc/nginx/sites-available/default
+    state: absent
+
+- name: Add new default site
+  copy:
+    src: /etc/ansible/roles/nginx_phpfpm/files/localhost
+    dest: /etc/nginx/sites-available/default
+    remote_src: yes
+  notify: reload_nginx
