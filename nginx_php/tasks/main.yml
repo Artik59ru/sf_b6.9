@@ -40,15 +40,12 @@
     src: /etc/ansible/roles/nginx_phpfpm/files/localhost
     dest: /etc/nginx/sites-available/default
     remote_src: yes
-    owner: www-data
-    group: www-data
+  notify: reload_nginx
 
 - name: Create site directory
   file: 
     path:  /var/www/localhost/html
     state: directory
-    owner: www-data
-    group: www-data
 
 - name: create index.php
   file:
@@ -60,9 +57,3 @@
     path: /var/www/localhost/html/index.php
     line: '<?php phpinfo();?>'
     create: yes
-    
-- name: Start service nginx
-  service:
-    name: nginx
-    state: restarted
-    enabled: yes
